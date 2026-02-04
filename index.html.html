@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forever With You - Interactive Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Lora:ital@1&family=Playfair+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --pink-soft: #ffe4e9;
+      --pink-blush: #ffd6e0;
+      --cream: #fff9f5;
+      --red-accent: #e84a5f;
+      --red-dark: #d13f54;
+      --gold: #d4af37;
+      --shadow: rgba(232, 74, 95, 0.15);
+    }
+    
+    * { 
+      margin:0; 
+      padding:0; 
+      box-sizing:border-box; 
+    }
+    
+    body {
+      font-family: 'Lora', serif;
+      background: linear-gradient(135deg, var(--pink-soft) 0%, var(--cream) 100%);
+      color: #4a2c2a;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Animated Hearts Background */
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .heart {
+      position: absolute;
+      font-size: 1.2rem;
+      color: rgba(232, 74, 95, 0.4);
+      animation: float linear infinite;
+      user-select: none;
+    }
+    
+    @keyframes float {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.7; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+    
+    /* Navigation Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem auto 2rem;
+      max-width: 800px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      padding: 0.8rem 1.8rem;
+      background: white;
+      border: 2px solid var(--pink-blush);
+      border-radius: 50px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: var(--red-accent);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tab-btn:hover {
+      background: var(--pink-blush);
+      transform: translateY(-3px);
+    }
+    
+    .tab-btn.active {
+      background: var(--red-accent);
+      color: white;
+      border-color: var(--red-accent);
+      box-shadow: 0 5px 15px var(--shadow);
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Header */
+    header {
+      padding: 1.5rem 5%;
+      text-align: center;
+      background: rgba(255,249,245,0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(232,74,95,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .logo {
+      font-family: 'Caveat', cursive;
+      font-size: 2.8rem;
+      color: var(--red-accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+    
+    /* Main Container */
+    .container {
+      padding: 2rem 5% 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    /* Personalize Tab */
+    .personalize-box {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px var(--shadow);
+      margin-bottom: 2rem;
+      animation: slideUp 0.6s ease;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-group {
+      margin-bottom: 1.8rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.7rem;
+      font-weight: bold;
+      color: var(--red-dark);
+      font-size: 1.1rem;
+    }
+    
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border: 2px solid var(--pink-blush);
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-family: 'Lora', serif;
+      transition: all 0.3s;
+      resize: vertical;
+    }
+    
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--red-accent);
+      box-shadow: 0 0 0 3px rgba(232, 74, 95, 0.1);
+    }
+    
+    textarea {
+      min-height: 120px;
+    }
+    
+    /* Gallery Tab */
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    
+    .gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px var(--shadow);
+      transition: all 0.4s ease;
+      position: relative;
+      height: 240px;
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 35px rgba(232,74,95,0.25);
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .remove-photo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(232, 74, 95, 0.9);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .gallery-item:hover .remove-photo {
+      opacity: 1;
+    }
+    
+    /* Upload Zone */
+    .upload-zone {
+      margin: 2.5rem auto;
+      padding: 2.5rem 2rem;
+      border: 3px dashed var(--pink-blush);
+      border-radius: 20px;
+      max-width: 600px;
+      transition: all 0.3s;
+      background: rgba(255,228,233,0.3);
+      text-align: center;
+      cursor: pointer;
+    }
+    
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--red-accent);
+      background: rgba(232,74,95,0.08);
+      transform: scale(1.01);
+    }
+    
+    .upload-icon {
+      font-size: 3.5rem;
+      color: var(--red-accent);
+      margin-bottom: 1rem;
+    }
+    
+    /* Preview Tab */
+    .preview-container {
+      background: white;
+      border-radius: 25px;
+      padding: 2.5rem;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .preview-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(90deg, var(--red-accent), var(--gold));
+    }
+    
+    .preview-title {
+      font-family: 'Caveat', cursive;
+      font-size: 3.5rem;
+      color: var(--red-accent);
+      text-align: center;
+      margin-bottom: 2rem;
+      line-height: 1.2;
+    }
+    
+    .preview-message {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: #5c3a38;
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: rgba(255, 228, 233, 0.2);
+      border-radius: 15px;
+      border-left: 5px solid var(--red-accent);
+    }
+    
+    .preview-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    
+    .preview-gallery img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    
+    .preview-gallery img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.9rem 2.5rem;
+      font-size: 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0.8rem;
+      font-family: 'Lora', serif;
+      font-weight: bold;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+    }
+    
+    .btn-yes {
+      background: linear-gradient(135deg, var(--red-accent), var(--red-dark));
+      color: white;
+      box-shadow: 0 5px 15px rgba(232, 74, 95, 0.3);
+    }
+    
+    .btn-yes:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(232, 74, 95, 0.4);
+    }
+    
+    .btn-no {
+      background: transparent;
+      border: 2px solid var(--pink-blush);
+      color: var(--red-accent);
+    }
+    
+    .btn-no:hover {
+      background: rgba(255,228,233,0.6);
+      transform: translateY(-3px);
+    }
+    
+    .btn-primary {
+      background: var(--red-accent);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--red-dark);
+      transform: translateY(-3px);
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: var(--red-accent);
+      border: 2px solid var(--pink-blush);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--pink-blush);
+    }
+    
+    .btn-tertiary {
+      background: linear-gradient(135deg, var(--gold), #ffb347);
+      color: white;
+    }
+    
+    .btn-tertiary:hover {
+      background: linear-gradient(135deg, #c19b2c, #e89c3c);
+      transform: translateY(-3px);
+    }
+    
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      gap: 1rem;
+    }
+    
+    /* Scanner Button in Header */
+    .scanner-btn {
+      position: absolute;
+      right: 5%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--red-accent);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+    }
+    
+    .scanner-btn:hover {
+      background: var(--red-dark);
+      transform: translateY(-50%) scale(1.05);
+    }
+    
+    /* Persuasion Messages */
+    .persuasion {
+      position: fixed;
+      padding: 1.2rem 1.8rem;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,248,248,0.95));
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: var(--red-accent);
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s ease;
+      z-index: 100;
+      max-width: 280px;
+      text-align: center;
+      border: 2px solid var(--pink-blush);
+    }
+    
+    .persuasion.show {
+      opacity: 1;
+      transform: scale(1) translateY(-20px);
+    }
+    
+    /* Share Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 25px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      animation: popIn 0.5s ease;
+    }
+    
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .modal-icon {
+      font-size: 4rem;
+      color: var(--red-accent);
+      margin-bottom: 1.5rem;
+      animation: heartbeat 1.5s infinite;
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .share-link-container {
+      margin: 1.5rem 0;
+    }
+    
+    .share-link {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid var(--pink-blush);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    
+    .share-link:focus {
+      outline: none;
+      border-color: var(--red-accent);
+    }
+    
+    .share-options {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .share-btn {
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: bold;
+      transition: transform 0.3s;
+    }
+    
+    .share-btn:hover {
+      transform: translateY(-3px);
+    }
+    
+    .share-copy {
+      background: var(--red-accent);
+      color: white;
+    }
+    
+    .share-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+    
+    .share-email {
+      background: #4285F4;
+      color: white;
+    }
+    
+    .qr-code {
+      margin: 1.5rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    
+    /* Scanner Modal */
+    .scanner-modal .modal-content {
+      max-width: 600px;
+    }
+    
+    .scanner-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    #qr-scanner {
+      width: 100%;
+      height: 300px;
+      background: #f0f0f0;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      border: 3px solid var(--pink-blush);
+    }
+    
+    #qr-scanner video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .scanner-frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      border: 3px solid var(--red-accent);
+      border-radius: 10px;
+      box-shadow: 0 0 0 1000px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+    
+    .scanner-guide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--red-accent);
+      animation: scan 2s infinite linear;
+      z-index: 2;
+    }
+    
+    @keyframes scan {
+      0% { top: 0; }
+      50% { top: calc(100% - 3px); }
+      100% { top: 0; }
+    }
+    
+    .scanner-instructions {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: rgba(255, 228, 233, 0.3);
+      border-radius: 10px;
+      text-align: left;
+    }
+    
+    .scanner-instructions ol {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .scanner-instructions li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .file-upload-scanner {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border: 2px dashed var(--pink-blush);
+      border-radius: 15px;
+      cursor: pointer;
+    }
+    
+    .file-upload-scanner:hover {
+      border-color: var(--red-accent);
+      background: rgba(232,74,95,0.05);
+    }
+    
+    /* Loader */
+    .loader {
+      display: none;
+      margin: 1rem auto;
+      text-align: center;
+    }
+    
+    .loader.active {
+      display: block;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(232, 74, 95, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--red-accent);
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #8a6a68;
+      font-size: 0.9rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(232,74,95,0.1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .logo { font-size: 2.3rem; }
+      .tab-btn { padding: 0.7rem 1.4rem; font-size: 1.1rem; }
+      .preview-title { font-size: 2.8rem; }
+      .btn { padding: 0.8rem 1.8rem; font-size: 1.1rem; }
+      .action-buttons { flex-direction: column; align-items: center; }
+      .gallery-container { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .share-options { flex-direction: column; align-items: center; }
+      .share-btn { width: 100%; justify-content: center; }
+      .scanner-btn {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin: 0.5rem auto;
+        width: auto;
+      }
+      header { padding-bottom: 5rem; position: relative; }
+    }
+    
+    @media (max-width: 480px) {
+      .container { padding: 1rem 3% 3rem; }
+      .personalize-box { padding: 1.5rem; }
+      .gallery-container { grid-template-columns: 1fr 1fr; }
+      .preview-container { padding: 1.5rem; }
+      .modal-content { padding: 1.5rem; }
+      #qr-scanner { height: 250px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Hearts Background -->
+  <div class="hearts-bg" id="hearts"></div>
+
+  <!-- Header -->
+  <header>
+    <button class="scanner-btn" id="openScannerBtn">
+      <i class="fas fa-qrcode"></i> Scan QR Code
+    </button>
+    
+    <div class="logo">
+      <i class="fas fa-heart"></i>
+      Forever With You
+      <i class="fas fa-heart"></i>
+    </div>
+    <p style="color: #8a6a68; font-style: italic;">Create your perfect marriage proposal</p>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="personalize">
+      <i class="fas fa-edit"></i> Personalize
+    </button>
+    <button class="tab-btn" data-tab="gallery">
+      <i class="fas fa-images"></i> Our Photos
+    </button>
+    <button class="tab-btn" data-tab="preview">
+      <i class="fas fa-eye"></i> Preview & Share
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Personalize Tab -->
+    <div id="personalize" class="tab-content active">
+      <div class="personalize-box">
+        <h2 style="color: var(--red-accent); margin-bottom: 1.5rem; font-size: 2rem;">
+          <i class="fas fa-heart"></i> Personalize Your Proposal
+        </h2>
+        
+        <div class="form-group">
+          <label for="herName"><i class="fas fa-user-circle"></i> Her Name / Nickname</label>
+          <input type="text" id="herName" placeholder="e.g. My Love, Sweetheart, Sarah..." value="My Love">
+        </div>
+        
+        <div class="form-group">
+          <label for="yourName"><i class="fas fa-user"></i> Your Name</label>
+          <input type="text" id="yourName" placeholder="Enter your name" value="">
+        </div>
+        
+        <div class="form-group">
+          <label for="proposalMsg"><i class="fas fa-quote-left"></i> Proposal Question</label>
+          <input type="text" id="proposalMsg" placeholder="The big question..." value="Will you marry me?">
+        </div>
+        
+        <div class="form-group">
+          <label for="loveMessage"><i class="fas fa-envelope"></i> Your Love Message</label>
+          <textarea id="loveMessage" placeholder="Write your heartfelt message here...">My dearest, every moment with you feels like a beautiful dream. I want to wake up next to you every morning and share every sunset with you. I promise to cherish, respect, and love you forever.</textarea>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn btn-primary" id="savePersonalization">
+            <i class="fas fa-save"></i> Save Personalization
+          </button>
+        </div>
+      </div>
+      
+      <div style="text-align: center; color: #8a6a68; margin-top: 1rem;">
+        <p><i class="fas fa-lightbulb"></i> Fill in all details, then go to the "Our Photos" tab to add your pictures</p>
+      </div>
+    </div>
+
+    <!-- Gallery Tab -->
+    <div id="gallery" class="tab-content">
+      <div class="personalize-box">
+        <h2 style="color: var(--red-accent); margin-bottom: 1.5rem; font-size: 2rem;">
+          <i class="fas fa-images"></i> Our Photo Gallery
+        </h2>
+        
+        <p style="margin-bottom: 1.5rem; color: #5c3a38;">
+          Add your favorite photos together. These will appear in your proposal.
+        </p>
+        
+        <div class="gallery-container" id="galleryContainer">
+          <!-- Starter photos -->
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1519741497674-281450b9b157?w=500&q=80" alt="Couple moment">
+            <div class="remove-photo" onclick="removePhoto(this)">
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fe4726?w=500&q=80" alt="Romantic walk">
+            <div class="remove-photo" onclick="removePhoto(this)">
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="dropzone">
+          <div class="upload-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          <h3 style="color: var(--red-accent); margin-bottom: 0.5rem;">
+            Add Your Photos Together
+          </h3>
+          <p style="margin-bottom: 1.5rem; color: #5c3a38;">
+            Drag & drop your photos here, or click to browse
+          </p>
+          <label for="fileInput" class="btn btn-primary">
+            <i class="fas fa-folder-open"></i> Select Photos
+          </label>
+          <input type="file" id="fileInput" multiple accept="image/*" style="display:none;">
+          <p style="margin-top: 1rem; font-size: 0.9rem; color: #8a6a68;">
+            <i class="fas fa-info-circle"></i> You can upload up to 12 photos
+          </p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn btn-secondary" id="addSamplePhotos">
+            <i class="fas fa-magic"></i> Add Sample Photos
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Tab -->
+    <div id="preview" class="tab-content">
+      <div class="preview-container">
+        <div class="preview-title" id="previewTitle">My Dearest My Love,</div>
+        
+        <div class="preview-message" id="previewMessage">
+          My dearest My Love, every moment with you feels like a beautiful dream. I want to wake up next to you every morning and share every sunset with you. I promise to cherish, respect, and love you forever.
+        </div>
+        
+        <div class="preview-gallery" id="previewGallery">
+          <!-- Preview images will be added here -->
+        </div>
+        
+        <div style="text-align: center; margin: 2.5rem 0;">
+          <h2 style="color: var(--red-accent); font-size: 2.5rem; margin-bottom: 1rem; font-family: 'Caveat', cursive;">
+            Will you marry me?
+          </h2>
+          
+          <div class="action-buttons">
+            <button class="btn btn-yes" id="yesButton">
+              <i class="fas fa-heart"></i> YES, Forever!
+            </button>
+            <button class="btn btn-no" id="noButton">
+              <i class="fas fa-question-circle"></i> Maybe...
+            </button>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--pink-blush);">
+          <h3 style="color: var(--red-accent); margin-bottom: 1rem;">
+            <i class="fas fa-share-alt"></i> Share Your Proposal
+          </h3>
+          <p style="margin-bottom: 1.5rem; color: #5c3a38;">
+            Create a shareable link to send to your loved one
+          </p>
+          <button class="btn btn-primary" id="generateLink">
+            <i class="fas fa-link"></i> Create Shareable Link
+          </button>
+          <button class="btn btn-tertiary" id="generateQR">
+            <i class="fas fa-qrcode"></i> Generate QR Code
+          </button>
+          <button class="btn btn-secondary" id="savePage">
+            <i class="fas fa-download"></i> Download as HTML
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div class="modal" id="shareModal">
+    <div class="modal-content">
+      <div class="modal-icon">
+        <i class="fas fa-share-alt"></i>
+      </div>
+      <h2 style="color: var(--red-accent); margin-bottom: 1rem;">
+        Your Proposal is Ready!
+      </h2>
+      <p id="modalMessage" style="font-size: 1.2rem; margin-bottom: 1.5rem; color: #5c3a38;">
+        Share this link with your loved one:
+      </p>
+      
+      <div class="loader" id="linkLoader">
+        <div class="spinner"></div>
+        <p>Creating your shareable link...</p>
+      </div>
+      
+      <div class="share-link-container" id="linkContainer" style="display: none;">
+        <input type="text" class="share-link" id="shareableLink" readonly>
+        <p style="font-size: 0.9rem; color: #8a6a68; margin: 0.5rem 0;">
+          <i class="fas fa-info-circle"></i> This link contains your complete proposal
+        </p>
+        
+        <div class="share-options">
+          <button class="share-btn share-copy" id="copyLinkBtn">
+            <i class="fas fa-copy"></i> Copy Link
+          </button>
+          <button class="share-btn share-whatsapp" id="whatsappShare">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </button>
+          <button class="share-btn share-email" id="emailShare">
+            <i class="fas fa-envelope"></i> Email
+          </button>
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+          <p style="color: #8a6a68; margin-bottom: 1rem;">
+            <i class="fas fa-qrcode"></i> Scan to open on mobile:
+          </p>
+          <div class="qr-code" id="qrCode">
+            <!-- QR Code will be generated here -->
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn btn-secondary" id="closeShareModal" style="margin-top: 1.5rem;">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+
+  <!-- QR Code Scanner Modal -->
+  <div class="modal scanner-modal" id="scannerModal">
+    <div class="modal-content">
+      <div class="modal-icon">
+        <i class="fas fa-qrcode"></i>
+      </div>
+      <h2 style="color: var(--red-accent); margin-bottom: 1rem;">
+        Scan QR Code
+      </h2>
+      <p id="scannerMessage" style="font-size: 1.2rem; margin-bottom: 1.5rem; color: #5c3a38;">
+        Scan a QR code to open a shared proposal
+      </p>
+      
+      <div class="scanner-container">
+        <div id="qr-scanner">
+          <div class="scanner-frame">
+            <div class="scanner-guide"></div>
+          </div>
+          <video id="scanner-video" muted playsinline></video>
+          <canvas id="scanner-canvas" style="display:none;"></canvas>
+        </div>
+        
+        <div class="scanner-instructions">
+          <h4 style="color: var(--red-accent); margin-bottom: 0.5rem;">
+            <i class="fas fa-info-circle"></i> How to scan:
+          </h4>
+          <ol>
+            <li>Allow camera access when prompted</li>
+            <li>Point your camera at a proposal QR code</li>
+            <li>Hold steady until it scans automatically</li>
+            <li>Or upload a QR code image below</li>
+          </ol>
+        </div>
+        
+        <div class="file-upload-scanner" id="qrFileUpload">
+          <div style="text-align: center; color: var(--red-accent); margin-bottom: 0.5rem;">
+            <i class="fas fa-file-upload" style="font-size: 2rem;"></i>
+          </div>
+          <p style="text-align: center; margin-bottom: 0.5rem;">
+            <strong>Or upload QR code image</strong>
+          </p>
+          <p style="text-align: center; font-size: 0.9rem; color: #8a6a68;">
+            Click here to select a QR code image from your device
+          </p>
+          <input type="file" id="qrFileInput" accept="image/*" style="display:none;">
+        </div>
+        
+        <div class="loader" id="scannerLoader">
+          <div class="spinner"></div>
+          <p>Scanning QR code...</p>
+        </div>
+      </div>
+      
+      <div style="margin-top: 1.5rem;">
+        <button class="btn btn-primary" id="startScannerBtn">
+          <i class="fas fa-camera"></i> Start Scanner
+        </button>
+        <button class="btn btn-secondary" id="closeScannerModal">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <div class="modal-icon">
+        <i class="fas fa-heart"></i>
+      </div>
+      <h2 style="color: var(--red-accent); margin-bottom: 1rem;">
+        Congratulations!
+      </h2>
+      <p id="successMessage" style="font-size: 1.2rem; margin-bottom: 2rem; color: #5c3a38;">
+        Your proposal page has been created successfully!
+      </p>
+      <button class="btn btn-yes" id="closeSuccessModal">
+        <i class="fas fa-check"></i> Continue
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Made with <i class="fas fa-heart" style="color: var(--red-accent);"></i> for your special moment</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Scan QR codes to open shared proposals</p>
+  </footer>
+
+  <!-- QR Code and Scanner Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+  <script>
+    // Initialize variables
+    let photos = [];
+    let proposalData = {
+      herName: "My Love",
+      yourName: "",
+      proposalMsg: "Will you marry me?",
+      loveMessage: "My dearest, every moment with you feels like a beautiful dream. I want to wake up next to you every morning and share every sunset with you. I promise to cherish, respect, and love you forever."
+    };
+
+    // Scanner variables
+    let scannerActive = false;
+    let scannerStream = null;
+    let scanInterval = null;
+
+    // DOM Elements
+    const heartsContainer = document.getElementById('hearts');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const galleryContainer = document.getElementById('galleryContainer');
+    const previewGallery = document.getElementById('previewGallery');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewMessage = document.getElementById('previewMessage');
+    const shareModal = document.getElementById('shareModal');
+    const scannerModal = document.getElementById('scannerModal');
+    const successModal = document.getElementById('successModal');
+    const modalMessage = document.getElementById('modalMessage');
+    const successMessage = document.getElementById('successMessage');
+    const fileInput = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+    const linkLoader = document.getElementById('linkLoader');
+    const linkContainer = document.getElementById('linkContainer');
+    const shareableLink = document.getElementById('shareableLink');
+    const qrCode = document.getElementById('qrCode');
+    const scannerVideo = document.getElementById('scanner-video');
+    const scannerCanvas = document.getElementById('scanner-canvas');
+    const scannerLoader = document.getElementById('scannerLoader');
+
+    // 1. Create animated hearts background
+    function createHearts() {
+      for (let i = 0; i < 25; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '♥';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+        heart.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        heart.style.animationDelay = Math.random() * 5 + 's';
+        heartsContainer.appendChild(heart);
+      }
+    }
+
+    // 2. Tab switching functionality
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.getAttribute('data-tab');
+        
+        // Update active tab button
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Show active tab content
+        tabContents.forEach(content => content.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        // If preview tab is selected, update it
+        if (tabId === 'preview') {
+          updatePreview();
+        }
+      });
+    });
+
+    // 3. Personalization functionality
+    function setupPersonalization() {
+      const herNameInput = document.getElementById('herName');
+      const yourNameInput = document.getElementById('yourName');
+      const proposalMsgInput = document.getElementById('proposalMsg');
+      const loveMessageInput = document.getElementById('loveMessage');
+      const saveButton = document.getElementById('savePersonalization');
+      
+      // Check URL for shared data
+      checkUrlForData();
+      
+      // Load saved data from localStorage if available
+      const savedData = localStorage.getItem('proposalData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        proposalData = { ...proposalData, ...parsedData };
+        herNameInput.value = proposalData.herName;
+        yourNameInput.value = proposalData.yourName;
+        proposalMsgInput.value = proposalData.proposalMsg;
+        loveMessageInput.value = proposalData.loveMessage;
+      }
+      
+      // Update proposal data on input
+      herNameInput.addEventListener('input', () => {
+        proposalData.herName = herNameInput.value;
+      });
+      
+      yourNameInput.addEventListener('input', () => {
+        proposalData.yourName = yourNameInput.value;
+      });
+      
+      proposalMsgInput.addEventListener('input', () => {
+        proposalData.proposalMsg = proposalMsgInput.value;
+      });
+      
+      loveMessageInput.addEventListener('input', () => {
+        proposalData.loveMessage = loveMessageInput.value;
+      });
+      
+      // Save personalization
+      saveButton.addEventListener('click', () => {
+        localStorage.setItem('proposalData', JSON.stringify(proposalData));
+        showSuccessModal('Personalization saved successfully!');
+      });
+    }
+    
+    // Check URL for shared data
+    function checkUrlForData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sharedData = urlParams.get('data');
+      
+      if (sharedData) {
+        try {
+          // Decode the base64 data
+          const decodedData = atob(sharedData);
+          const parsedData = JSON.parse(decodedData);
+          
+          // Load the shared data
+          proposalData = { ...proposalData, ...parsedData.proposalData };
+          photos = parsedData.photos || [];
+          
+          // Update form fields
+          document.getElementById('herName').value = proposalData.herName;
+          document.getElementById('yourName').value = proposalData.yourName;
+          document.getElementById('proposalMsg').value = proposalData.proposalMsg;
+          document.getElementById('loveMessage').value = proposalData.loveMessage;
+          
+          // Save to localStorage
+          localStorage.setItem('proposalData', JSON.stringify(proposalData));
+          localStorage.setItem('proposalPhotos', JSON.stringify(photos));
+          
+          // Update gallery
+          updateGallery();
+          
+          // Switch to preview tab
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          document.querySelector('[data-tab="preview"]').classList.add('active');
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.getElementById('preview').classList.add('active');
+          
+          // Update preview
+          updatePreview();
+          
+          showSuccessModal('Shared proposal loaded successfully!');
+        } catch (e) {
+          console.error('Error loading shared data:', e);
+        }
+      }
+    }
+
+    // 4. Photo gallery functionality
+    function setupGallery() {
+      // Load saved photos from localStorage
+      const savedPhotos = localStorage.getItem('proposalPhotos');
+      if (savedPhotos) {
+        photos = JSON.parse(savedPhotos);
+        updateGallery();
+      }
+      
+      // File input handling
+      fileInput.addEventListener('change', handleFiles);
+      
+      // Drag and drop handling
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.add('dragover'));
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => dropzone.classList.remove('dragover'));
+      });
+      
+      dropzone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        handleFiles({ target: { files } });
+      });
+      
+      // Add sample photos button
+      document.getElementById('addSamplePhotos').addEventListener('click', addSamplePhotos);
+    }
+    
+    function handleFiles(e) {
+      const files = e.target.files;
+      if (photos.length + files.length > 12) {
+        showSuccessModal('You can only add up to 12 photos. Please remove some first.');
+        return;
+      }
+      
+      for (let file of files) {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            photos.push(event.target.result);
+            if (photos.length > 12) photos = photos.slice(0, 12);
+            updateGallery();
+            localStorage.setItem('proposalPhotos', JSON.stringify(photos));
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+      fileInput.value = '';
+    }
+    
+    function addSamplePhotos() {
+      const samplePhotos = [
+        'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=500&q=80',
+        'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&q=80',
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80',
+        'https://images.unsplash.com/photo-1529254479751-fbacb4c7a587?w=500&q=80'
+      ];
+      
+      if (photos.length + samplePhotos.length > 12) {
+        showSuccessModal('You can only have 12 photos. Remove some before adding samples.');
+        return;
+      }
+      
+      photos = [...photos, ...samplePhotos];
+      if (photos.length > 12) photos = photos.slice(0, 12);
+      
+      updateGallery();
+      localStorage.setItem('proposalPhotos', JSON.stringify(photos));
+      showSuccessModal('Sample photos added! You can replace them with your own.');
+    }
+    
+    function updateGallery() {
+      galleryContainer.innerHTML = '';
+      photos.forEach((photo, index) => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.innerHTML = `
+          <img src="${photo}" alt="Our photo ${index + 1}">
+          <div class="remove-photo" onclick="removePhoto(${index})">
+            <i class="fas fa-times"></i>
+          </div>
+        `;
+        galleryContainer.appendChild(galleryItem);
+      });
+    }
+    
+    function removePhoto(index) {
+      photos.splice(index, 1);
+      updateGallery();
+      localStorage.setItem('proposalPhotos', JSON.stringify(photos));
+    }
+
+    // 5. Preview functionality
+    function updatePreview() {
+      // Update title
+      previewTitle.textContent = `My Dearest ${proposalData.herName},`;
+      
+      // Update message
+      const yourNameText = proposalData.yourName ? `Love, ${proposalData.yourName}` : "With all my love";
+      previewMessage.innerHTML = `
+        ${proposalData.loveMessage}<br><br>
+        <strong>${proposalData.proposalMsg}</strong><br><br>
+        <em>${yourNameText}</em>
+      `;
+      
+      // Update gallery
+      previewGallery.innerHTML = '';
+      photos.forEach(photo => {
+        const img = document.createElement('img');
+        img.src = photo;
+        previewGallery.appendChild(img);
+      });
+      
+      // If no photos, show message
+      if (photos.length === 0) {
+        previewGallery.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #8a6a68;">
+            <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <p>Add photos in the "Our Photos" tab to see them here</p>
+          </div>
+        `;
+      }
+    }
+
+    // 6. Yes/No button interactions
+    function setupProposalButtons() {
+      const yesButton = document.getElementById('yesButton');
+      const noButton = document.getElementById('noButton');
+      
+      const persuasionMessages = [
+        "Are you sure? We'd be amazing together!",
+        "Think of all our beautiful memories...",
+        "I'll love you more every single day!",
+        "Just imagine our future together...",
+        "I promise to make you endlessly happy!",
+        "You're my everything, please say yes!",
+        "We're perfect together, don't you think?"
+      ];
+      
+      // Yes button click
+      yesButton.addEventListener('click', () => {
+        const name = proposalData.herName || 'My Love';
+        createPersuasion(`Yay! ${name} said YES! 💍✨`, true);
+        
+        setTimeout(() => {
+          showSuccessModal(`💖 CONGRATULATIONS! 💖<br><br>${name} has agreed to marry you!<br><br>This is just the beginning of your forever...`);
+        }, 500);
+      });
+      
+      // No button hover
+      noButton.addEventListener('mouseover', () => {
+        const randomMsg = persuasionMessages[Math.floor(Math.random() * persuasionMessages.length)];
+        const x = Math.random() * (window.innerWidth - 250);
+        const y = Math.random() * (window.innerHeight - 150);
+        createPersuasion(randomMsg, false, x, y);
+      });
+      
+      // No button click
+      noButton.addEventListener('click', () => {
+        const x = window.innerWidth / 2 - 125;
+        const y = window.innerHeight / 2 - 75;
+        createPersuasion("I'll keep asking until you say YES! 💘", false, x, y);
+        noButton.innerHTML = '<i class="fas fa-heartbeat"></i> Still thinking...';
+        setTimeout(() => {
+          noButton.innerHTML = '<i class="fas fa-question-circle"></i> Maybe...';
+        }, 2000);
+      });
+    }
+    
+    function createPersuasion(text, isYes = false, x = null, y = null) {
+      const existing = document.querySelector('.persuasion.show');
+      if (existing) existing.remove();
+      
+      const persuasion = document.createElement('div');
+      persuasion.className = 'persuasion';
+      persuasion.textContent = text;
+      
+      if (x && y) {
+        persuasion.style.left = x + 'px';
+        persuasion.style.top = y + 'px';
+      } else {
+        persuasion.style.left = '50%';
+        persuasion.style.top = '50%';
+        persuasion.style.transform = 'translate(-50%, -50%)';
+      }
+      
+      if (isYes) {
+        persuasion.style.background = 'linear-gradient(135deg, #ff9eb5, #e84a5f)';
+        persuasion.style.color = 'white';
+        persuasion.style.fontSize = '1.8rem';
+      }
+      
+      document.body.appendChild(persuasion);
+      
+      setTimeout(() => persuasion.classList.add('show'), 10);
+      
+      setTimeout(() => {
+        persuasion.classList.remove('show');
+        setTimeout(() => persuasion.remove(), 600);
+      }, isYes ? 4000 : 2500);
+    }
+
+    // 7. QR Code Scanner Functionality
+    function setupScanner() {
+      // Open scanner modal button
+      document.getElementById('openScannerBtn').addEventListener('click', () => {
+        scannerModal.classList.add('active');
+      });
+      
+      // Generate QR code button
+      document.getElementById('generateQR').addEventListener('click', generateQRCodeOnly);
+      
+      // Start scanner button
+      document.getElementById('startScannerBtn').addEventListener('click', startScanner);
+      
+      // Close scanner modal
+      document.getElementById('closeScannerModal').addEventListener('click', () => {
+        stopScanner();
+        scannerModal.classList.remove('active');
+      });
+      
+      // QR code file upload
+      document.getElementById('qrFileUpload').addEventListener('click', () => {
+        document.getElementById('qrFileInput').click();
+      });
+      
+      document.getElementById('qrFileInput').addEventListener('change', handleQRFileUpload);
+    }
+    
+    function startScanner() {
+      if (scannerActive) return;
+      
+      scannerLoader.classList.add('active');
+      
+      // Request camera access
+      navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
+      })
+      .then(stream => {
+        scannerStream = stream;
+        scannerVideo.srcObject = stream;
+        scannerVideo.play();
+        scannerActive = true;
+        scannerLoader.classList.remove('active');
+        
+        // Start scanning
+        scanInterval = setInterval(scanQRCode, 500);
+      })
+      .catch(err => {
+        console.error('Camera error:', err);
+        scannerLoader.classList.remove('active');
+        alert('Unable to access camera. Please check permissions and try again.');
+      });
+    }
+    
+    function stopScanner() {
+      if (scanInterval) {
+        clearInterval(scanInterval);
+        scanInterval = null;
+      }
+      
+      if (scannerStream) {
+        scannerStream.getTracks().forEach(track => track.stop());
+        scannerStream = null;
+      }
+      
+      scannerActive = false;
+      scannerVideo.srcObject = null;
+    }
+    
+    function scanQRCode() {
+      if (!scannerActive || !scannerVideo.readyState || scannerVideo.readyState !== 4) return;
+      
+      const canvas = scannerCanvas;
+      const context = canvas.getContext('2d');
+      
+      // Set canvas dimensions to match video
+      canvas.width = scannerVideo.videoWidth;
+      canvas.height = scannerVideo.videoHeight;
+      
+      // Draw video frame to canvas
+      context.drawImage(scannerVideo, 0, 0, canvas.width, canvas.height);
+      
+      // Get image data from canvas
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      
+      // Scan for QR code
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert',
+      });
+      
+      if (code) {
+        // QR code found!
+        stopScanner();
+        processScannedURL(code.data);
+      }
+    }
+    
+    function handleQRFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      scannerLoader.classList.add('active');
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = scannerCanvas;
+          const context = canvas.getContext('2d');
+          
+          // Set canvas dimensions to match image
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          // Draw image to canvas
+          context.drawImage(img, 0, 0);
+          
+          // Get image data from canvas
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          
+          // Scan for QR code
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: 'dontInvert',
+          });
+          
+          scannerLoader.classList.remove('active');
+          
+          if (code) {
+            processScannedURL(code.data);
+          } else {
+            alert('No QR code found in the image. Please try another image.');
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function processScannedURL(url) {
+      try {
+        // Parse the URL to get the data parameter
+        const urlObj = new URL(url);
+        const dataParam = urlObj.searchParams.get('data');
+        
+        if (dataParam) {
+          // Found a proposal QR code!
+          scannerModal.classList.remove('active');
+          
+          // Redirect to the scanned URL
+          window.location.href = url;
+        } else {
+          alert('This QR code does not contain a valid proposal link.');
+        }
+      } catch (e) {
+        // Not a valid URL, try to extract data from the string
+        if (url.includes('data=')) {
+          const dataMatch = url.match(/data=([^&]+)/);
+          if (dataMatch && dataMatch[1]) {
+            scannerModal.classList.remove('active');
+            window.location.href = window.location.origin + window.location.pathname + '?data=' + dataMatch[1];
+          } else {
+            alert('This QR code does not contain a valid proposal link.');
+          }
+        } else {
+          alert('This QR code does not contain a valid proposal link.');
+        }
+      }
+    }
+    
+    function generateQRCodeOnly() {
+      // Prepare data for sharing
+      const shareData = {
+        proposalData: proposalData,
+        photos: photos.filter(photo => !photo.includes('unsplash.com'))
+      };
+      
+      // Convert to base64 for URL
+      const dataStr = JSON.stringify(shareData);
+      const base64Data = btoa(unescape(encodeURIComponent(dataStr)));
+      
+      // Create shareable URL
+      const currentUrl = window.location.origin + window.location.pathname;
+      const shareableUrl = `${currentUrl}?data=${encodeURIComponent(base64Data)}`;
+      
+      // Create QR Code modal
+      showQRCodeModal(shareableUrl);
+    }
+    
+    function showQRCodeModal(url) {
+      const modalContent = `
+        <div class="modal-content">
+          <div class="modal-icon">
+            <i class="fas fa-qrcode"></i>
+          </div>
+          <h2 style="color: var(--red-accent); margin-bottom: 1rem;">
+            Your Proposal QR Code
+          </h2>
+          <p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: #5c3a38;">
+            Scan this QR code to open your proposal:
+          </p>
+          
+          <div class="qr-code" id="generatedQRCode">
+            <!-- QR Code will be generated here -->
+          </div>
+          
+          <p style="margin-top: 1rem; font-size: 0.9rem; color: #8a6a68;">
+            <i class="fas fa-info-circle"></i> Save or screenshot this QR code to share
+          </p>
+          
+          <div style="margin-top: 1.5rem;">
+            <button class="btn btn-primary" id="downloadQRCode">
+              <i class="fas fa-download"></i> Download QR Code
+            </button>
+            <button class="btn btn-secondary" id="closeQRModal">
+              <i class="fas fa-times"></i> Close
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Create modal
+      const modal = document.createElement('div');
+      modal.className = 'modal active';
+      modal.innerHTML = modalContent;
+      document.body.appendChild(modal);
+      
+      // Generate QR Code
+      const qrContainer = modal.querySelector('#generatedQRCode');
+      QRCode.toCanvas(qrContainer, url, {
+        width: 200,
+        height: 200,
+        margin: 1,
+        color: {
+          dark: '#e84a5f',
+          light: '#ffffff'
+        }
+      }, function(error) {
+        if (error) console.error(error);
+      });
+      
+      // Add event listeners
+      modal.querySelector('#closeQRModal').addEventListener('click', () => {
+        modal.remove();
+      });
+      
+      modal.querySelector('#downloadQRCode').addEventListener('click', () => {
+        const canvas = qrContainer.querySelector('canvas');
+        const link = document.createElement('a');
+        link.download = `proposal-qr-${proposalData.herName.replace(/\s+/g, '-').toLowerCase()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+      
+      // Close on background click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    // 8. Share functionality
+    function setupShare() {
+      document.getElementById('generateLink').addEventListener('click', generateShareLink);
+      document.getElementById('savePage').addEventListener('click', saveAsHTML);
+      document.getElementById('copyLinkBtn').addEventListener('click', copyLink);
+      document.getElementById('whatsappShare').addEventListener('click', shareOnWhatsApp);
+      document.getElementById('emailShare').addEventListener('click', shareViaEmail);
+      document.getElementById('closeShareModal').addEventListener('click', () => {
+        shareModal.classList.remove('active');
+      });
+      document.getElementById('closeSuccessModal').addEventListener('click', () => {
+        successModal.classList.remove('active');
+      });
+    }
+    
+    function generateShareLink() {
+      // Show loading state
+      linkLoader.classList.add('active');
+      linkContainer.style.display = 'none';
+      shareModal.classList.add('active');
+      
+      // Prepare data for sharing
+      const shareData = {
+        proposalData: proposalData,
+        photos: photos.filter(photo => !photo.includes('unsplash.com'))
+      };
+      
+      // Convert to base64 for URL
+      const dataStr = JSON.stringify(shareData);
+      const base64Data = btoa(unescape(encodeURIComponent(dataStr)));
+      
+      // Create shareable URL
+      const currentUrl = window.location.origin + window.location.pathname;
+      const shareableUrl = `${currentUrl}?data=${encodeURIComponent(base64Data)}`;
+      
+      // Simulate processing delay
+      setTimeout(() => {
+        shareableLink.value = shareableUrl;
+        linkLoader.classList.remove('active');
+        linkContainer.style.display = 'block';
+        
+        // Generate QR Code
+        qrCode.innerHTML = '';
+        QRCode.toCanvas(qrCode, shareableUrl, {
+          width: 150,
+          height: 150,
+          margin: 1,
+          color: {
+            dark: '#e84a5f',
+            light: '#ffffff'
+          }
+        }, function(error) {
+          if (error) console.error(error);
+        });
+      }, 1500);
+    }
+    
+    function copyLink() {
+      shareableLink.select();
+      shareableLink.setSelectionRange(0, 99999); // For mobile devices
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          const copyBtn = document.getElementById('copyLinkBtn');
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          copyBtn.style.background = '#25D366';
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.background = '';
+          }, 2000);
+        }
+      } catch (err) {
+        // Fallback for browsers that don't support execCommand
+        navigator.clipboard.writeText(shareableLink.value).then(() => {
+          const copyBtn = document.getElementById('copyLinkBtn');
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          copyBtn.style.background = '#25D366';
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.background = '';
+          }, 2000);
+        });
+      }
+    }
+    
+    function shareOnWhatsApp() {
+      const text = `💖 A special proposal for you, ${proposalData.herName}! 💖\n\nClick the link to see it:\n${shareableLink.value}`;
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+    
+    function shareViaEmail() {
+      const subject = `A special proposal for you, ${proposalData.herName}!`;
+      const body = `Dear ${proposalData.herName},\n\nI have something special to ask you. Please click the link below to see my heartfelt proposal:\n\n${shareableLink.value}\n\nWith all my love,\n${proposalData.yourName || 'Your loved one'}`;
+      const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = url;
+    }
+    
+    function saveAsHTML() {
+      // Create a complete HTML file with all data
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <title>My Proposal to ${proposalData.herName}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Include all the CSS from this page */
+    ${document.querySelector('style').innerHTML}
+  </style>
+</head>
+<body>
+  <!-- Proposal content -->
+  <div class="preview-container" style="margin:0; border-radius:0; min-height:100vh;">
+    <div class="preview-title">My Dearest ${proposalData.herName},</div>
+    <div class="preview-message">
+      ${proposalData.loveMessage}<br><br>
+      <strong>${proposalData.proposalMsg}</strong><br><br>
+      <em>${proposalData.yourName ? `Love, ${proposalData.yourName}` : "With all my love"}</em>
+    </div>
+    <div class="preview-gallery">
+      ${photos.map(photo => `<img src="${photo}">`).join('')}
+    </div>
+    <div style="text-align:center; margin:3rem 0;">
+      <h2 style="color:#e84a5f; font-size:2.5rem;">Will you marry me?</h2>
+      <p style="margin-top:2rem; font-size:1.2rem;">
+        Open this page on a computer to see interactive buttons
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+      
+      // Create download link
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `proposal-to-${proposalData.herName.replace(/\s+/g, '-').toLowerCase()}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showSuccessModal('Your proposal has been saved as an HTML file!<br><br>You can now send this file to your loved one.');
+    }
+
+    // 9. Modal functionality
+    function showSuccessModal(message) {
+      successMessage.innerHTML = message;
+      successModal.classList.add('active');
+    }
+
+    // 10. Initialize everything
+    document.addEventListener('DOMContentLoaded', () => {
+      createHearts();
+      setupPersonalization();
+      setupGallery();
+      setupProposalButtons();
+      setupScanner();
+      setupShare();
+      updatePreview();
+      
+      // Show welcome message if no data
+      setTimeout(() => {
+        if (!localStorage.getItem('proposalData') && !window.location.search.includes('data=')) {
+          showSuccessModal('Welcome to your interactive proposal creator!<br><br>Start by personalizing your message in the first tab.');
+        }
+      }, 1000);
+    });
+
+    // Make removePhoto function available globally
+    window.removePhoto = removePhoto;
+  </script>
+</body>
+</html>
